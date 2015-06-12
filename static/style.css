@@ -1,0 +1,24 @@
+#footer{
+    position:absolute;
+    bottom:0;
+    border-top: solid gray 2px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: lightgray;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+#footcont{
+    padding-left: 10px;
+}
+
+#content{
+    padding: 5px;
+}
+
+body{
+    margin: 0px;
+    padding:0px;
+    font-family: sans-serif;
+}

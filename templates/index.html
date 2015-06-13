@@ -5,6 +5,10 @@
 Links:
 <ul>
 <li><a href="./log">Logs</a></li>
+{% if loginName != "" %}
+<li><a href="apps">Scripts</a></li>
+{% endif %}
+
 </ul>
 {% if loginName != "" %}
 Logged in as {{loginName}}. <a href="./logout">Logout</a>

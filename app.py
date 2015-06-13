@@ -25,11 +25,12 @@ config = json.load(open("config.json"))
 app.secret_key = config['secret']
 
 mwoauth = MWOAuth(consumer_key=config['oauth-token'], consumer_secret=config['oauth-secret'],
-                    base_url="https://es.wikipedia.org/w", clean_url="https://es.wikipedia.org/wiki")
+                    base_url="https://es.wikipedia.org/w", clean_url="https://es.wikipedia.org/wiki",
+                    name="es.wikipedia.org")
 app.register_blueprint(mwoauth.bp)
 
 @app.route('/')
-def home():
+def index():
     user = mwoauth.get_current_user()
     return render_template('index.html', loginName=user if user is not None else "")
 

@@ -19,16 +19,19 @@ from flask_mwoauth import MWOAuth
 import json
 
 app = Flask(__name__)
-
+#app.debug = True
 config = json.load(open("config.json"))
 
 app.secret_key = config['secret']
-mwoauth = MWOAuth(consumer_key=config['oauth-token'], consumer_secret=config['oauth-secret'])
+
+mwoauth = MWOAuth(consumer_key=config['oauth-token'], consumer_secret=config['oauth-secret'],
+                    base_url="https://es.wikipedia.org/w", clean_url="https://es.wikipedia.org/wiki")
 app.register_blueprint(mwoauth.bp)
 
 @app.route('/')
 def home():
-    return render_template('index.html', loginName=repr(mwoauth.get_current_user(False)))
+    user = mwoauth.get_current_user()
+    return render_template('index.html', loginName=user if user is not None else "")
 
 if __name__ == "__main__":
     app.run()

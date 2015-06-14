@@ -16,6 +16,7 @@
 from flask import Flask
 from flask import render_template
 from flask_mwoauth import MWOAuth
+from os import walk
 from peewee import SqliteDatabase, Model, CharField, IntegerField
 import json
 
@@ -44,17 +45,29 @@ def index():
         except:
             dbuser = Privs(username=user, privs=0)
             dbuser.save()
-        
-    return render_template('index.html', loginName=user if user is not None else "")
+        privs = dbuser.privs
+    else:
+        privs = -1
+
+    return render_template('index.html', loginName=user if user is not None else "", privs=privs)
 
 @app.route('/apps')
 def scripts(): # List scripts
     if mwoauth.get_current_user(False) is None:
-        return
+        return "Unauthorized"
     
     user = Privs.get(Privs.username == mwoauth.get_current_user())
-    if user.privs == 0:
-        return
+    if user.privs <= 0:
+        return "Unauthorized"
+    
+    f = []
+    for (dirpath, dirnames, filenames) in walk("./scripts"):
+        for filename in filenames:
+            if not filename.startswith("_") and filename.endswith(".py"):
+                f.append(filename.split(".py")[0])
+        break
+    
+    return render_template('scripts.html', scripts=f)
 
 @app.route('/script/<script>/', methods=('GET', 'POST'))
 def execscript(script):

@@ -5,7 +5,7 @@
 Links:
 <ul>
 <li><a href="./log">Logs</a></li>
-{% if loginName != "" %}
+{% if loginName != "" and privs >= 1 %}
 <li><a href="apps">Scripts</a></li>
 {% endif %}
 

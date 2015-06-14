@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}Scripts{% endblock %}
+{% block content %}
+<h1>Lista de scripts disponibles</h1>
+<ul>
+{% for x in scripts %}
+<li><a href="./script/{{ x }}">{{ x }}.py</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

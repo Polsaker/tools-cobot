@@ -19,6 +19,7 @@ from flask_mwoauth import MWOAuth
 from os import walk
 from peewee import SqliteDatabase, Model, CharField, IntegerField, TextField
 import json
+import time
 
 app = Flask(__name__)
 app.debug = True
@@ -92,7 +93,7 @@ def loglist():
 class EventLogger(object):
     def __init__(self, task_name):
         self.warning = False
-        self.logentry = LogEntry(status = 0, log = "", taskName=task_name)
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-")
         self.logentry.save()
     
     def finished(self):
@@ -100,10 +101,12 @@ class EventLogger(object):
             self.logentry.status = 3
         else:
             self.logentry.status = 1
+        self.logentry.endTime = time.time()
         self.logentry.save()
     
     def errored(self):
         self.logentry.status = 2
+        self.logentry.endTime = time.time()
         self.logentry.save()
     
     def warning(self):
@@ -127,6 +130,8 @@ class LogEntry(Model):
     log = TextField()
     taskName = CharField()
     description = CharField()
+    startTime = CharField() # timestamp
+    endTime = CharField()   # ^
     class Meta:
         database = db
 

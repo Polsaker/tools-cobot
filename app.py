@@ -14,10 +14,10 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 from flask import Flask
-from flask import render_template
+from flask import render_template, request
 from flask_mwoauth import MWOAuth
 from os import walk
-from peewee import SqliteDatabase, Model, CharField, IntegerField
+from peewee import SqliteDatabase, Model, CharField, IntegerField, TextField
 import json
 
 app = Flask(__name__)
@@ -69,7 +69,7 @@ def scripts(): # List scripts
     
     return render_template('scripts.html', scripts=f)
 
-@app.route('/script/<script>/', methods=('GET', 'POST'))
+@app.route('/script/<script>/', methods=['GET', 'POST'])
 def execscript(script):
     if mwoauth.get_current_user(False) is None:
         return "Unauthorized"
@@ -80,9 +80,35 @@ def execscript(script):
     mod = __import__("scripts." + script)
     
     script = getattr(mod, script).Script(config)
-    
+        
     return script.render(app, request)
 # ---
+
+class EventLogger(object):
+    def __init__(self, task_name):
+        self.warning = False
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name)
+        self.logentry.save()
+    
+    def finished(self):
+        if self.warning:
+            self.logentry.status = 3
+        else:
+            self.logentry.status = 1
+        self.logentry.save()
+    
+    def errored(self):
+        self.logentry.status = 2
+        self.logentry.save()
+    
+    def warning(self):
+        self.warning = True
+    
+    def appendLog(self, text):
+        self.logentry.log = text + "\n"
+        self.logentry.save()
+
+app.cosoEventLogger = EventLogger
 
 class Privs(Model):
     username = CharField()
@@ -91,6 +117,15 @@ class Privs(Model):
     class Meta:
         database = db
 
+class LogEntry(Model):
+    status = IntegerField()  # 0 = running; 1 = finished; 2 = errored; 3 = finished with errors
+    log = TextField()
+    taskName = CharField()
+    class Meta:
+        database = db
+
+
+LogEntry.create_table(True)
 Privs.create_table(True)
 
 if __name__ == "__main__":

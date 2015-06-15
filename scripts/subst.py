@@ -14,9 +14,10 @@ from flask import render_template
 class Script(object):
     def __init__(self, config):
         self.mediawiki = _tools.MediaWikiAPI(config['mwuser'], config['mwpass'])
-        self.mediawiki.login()
     
     def execute(self, app, request):
+        self.logger = app.cosoEventLogger("subst.py")
+        self.mediawiki.login()
         self.addSubst(request.form['name'])
         return "OK!"
     
@@ -31,7 +32,7 @@ class Script(object):
         COSO = plantilla
         syns = '(?:'
         try:
-            synonims = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=redirects&titles={0}&rdnamespace=10&rdlimit=500&format=json".format(quote_plus(COSO))))
+            synonims = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=redirects&titles={0}&rdnamespace=10&rdlimit=500&format=json".format(quote_plus(COSO.encode('utf8')))))
             synonims = synonims['query']['pages'][next(iter(synonims['query']['pages']))]['redirects']
             for synomim in synonims:
                 f = synomim['title'].replace("Plantilla:",'')
@@ -42,20 +43,35 @@ class Script(object):
         syns += "(?:" + f[0].lower() + "|" + f[0].upper() + ")" + f[1:] + ")"
 
 
-        linkeds = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=transcludedin&titles={0}&tinamespace=1|3|5|11|15|101|103|105&tishow=!redirect&tilimit=500&format=json".format(quote_plus(COSO))))
+        linkeds = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=transcludedin&titles={0}&tinamespace=1|3|5|11|15|101|103|105&tishow=!redirect&tilimit=500&format=json".format(quote_plus(COSO.encode('utf8')))))
         try:
             linkeds = linkeds['query']['pages'][next(iter(linkeds['query']['pages']))]['transcludedin']
         except:
             return
-            
+        
+        #linkeds = [linkeds[0]]
         for page in linkeds:
-            pagina = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=revisions&titles={0}&rvprop=content&format=json".format(quote_plus(page['title']))))['query']['pages'][str(page['pageid'])]['revisions'][0]['*']
+            pagina = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=revisions&titles={0}&rvprop=content&format=json".format(quote_plus(page['title'].encode('utf8')))))['query']['pages'][str(page['pageid'])]['revisions'][0]['*']
             pagina = re.sub('{{(?:Plantilla\:)?' + syns + "(\||})", '{{subst:' + COSO.replace("Plantilla:",'') + r"\1", pagina)
             #pagina = pagina.replace("{{" + COSO.replace("Plantilla:",''), "{{subst:" + COSO.replace("Plantilla:",''))
-            params = {"minor": '', "bot": '', "pageid": page['pageid'], "text": pagina, "token": gettoken(), "summary": "Bot: Añadiendo \"subst:\"."}
+            params = {"minor": '', "bot": '', "pageid": page['pageid'], "text": pagina, "token": self.mediawiki.gettoken(), "summary": "Bot: Añadiendo \"subst:\"."}
             rec = self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=edit&format=json", params)
-            print(rec)
+            try:
+                if rec['edit']['result'] == "Success":
+                    try:
+                        rec['edit']['nochange']
+                        self.logger.warning()
+                        self.logger.appendLog("WARNING: No changes! " + str(rec))
+                    except:
+                        self.logger.appendLog("OK: " + str(rec))
+            except:
+                self.logger.warning()
+                self.logger.appendLog("WARNING: ERROR?! " + str(rec))
+                
+            self.logger.appendLog(rec)
             #print(pagina)
+        
+        self.logger.finished()
 
 
 class SubstForm(Form):

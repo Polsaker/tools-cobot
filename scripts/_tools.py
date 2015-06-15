@@ -15,7 +15,14 @@ class MediaWikiAPI(object):
     def request(self, url, poststuff=None):
         #print(url)
         if poststuff is not None:
-            login_data = urlencode(poststuff).encode('utf-8')
+            str_post_data = {}
+            for k, v in poststuff.iteritems():
+                try:
+                    str_post_data[k] = unicode(v).encode('utf-8')
+                except:
+                    str_post_data[k] = v
+
+            login_data = urlencode(str_post_data).encode('utf-8')
             return self.opener.open(url, login_data).read().decode()
         return self.opener.open(url).read().decode()
 

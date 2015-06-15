@@ -82,6 +82,11 @@ def execscript(script):
     script = getattr(mod, script).Script(config)
         
     return script.render(app, request)
+    
+@app.route('/logs')
+def loglist():
+    return render_template('logs.html', logs=LogEntry.select())
+
 # ---
 
 class EventLogger(object):
@@ -121,6 +126,7 @@ class LogEntry(Model):
     status = IntegerField()  # 0 = running; 1 = finished; 2 = errored; 3 = finished with errors
     log = TextField()
     taskName = CharField()
+    description = CharField()
     class Meta:
         database = db
 

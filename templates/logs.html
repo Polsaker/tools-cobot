@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Scripts{% endblock %}
+{% block content %}
+<h1>Registros</h1>
+<table>
+<tr>
+    <td>#</td>
+    <td>Estado</td>
+    <td>Tarea</td>
+    <td>Comentario</td>
+</tr>
+{% for log in logs %}
+<tr>
+    <td>{{log.id}}</td>
+    <td>{{log.status}}</td>
+    <td>{{log.taskName}}</td>
+    <td>{{log.description}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

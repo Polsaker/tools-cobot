@@ -35,10 +35,7 @@ app.register_blueprint(mwoauth.bp)
 db = SqliteDatabase('stuff.db')
 db.connect()
 
-# ---
-
-@app.route('/')
-def index():
+def getPrivs():
     user = mwoauth.get_current_user(False)
     if user:
         try:
@@ -49,8 +46,12 @@ def index():
         privs = dbuser.privs
     else:
         privs = -1
+    return privs
+# ---
 
-    return render_template('index.html', loginName=user if user is not None else "", privs=privs)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/apps')
 def scripts(): # List scripts
@@ -86,18 +87,25 @@ def execscript(script):
     
 @app.route('/logs')
 def loglist():
-    return render_template('logs.html', logs=LogEntry.select())
+    return render_template('logs.html', logs=LogEntry.select().order_by(LogEntry.id.desc()))
 
 # ---
 
+@app.context_processor
+def inject_globals():
+    return dict(
+        mwoauth = mwoauth,
+        privs = getPrivs(),
+    )
+
 class EventLogger(object):
     def __init__(self, task_name):
-        self.warning = False
-        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-")
+        self.pwarning = False
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description="")
         self.logentry.save()
     
     def finished(self):
-        if self.warning:
+        if self.pwarning:
             self.logentry.status = 3
         else:
             self.logentry.status = 1
@@ -110,13 +118,14 @@ class EventLogger(object):
         self.logentry.save()
     
     def warning(self):
-        self.warning = True
+        self.pwarning = True
     
     def appendLog(self, text):
         self.logentry.log = text + "\n"
         self.logentry.save()
 
 app.cosoEventLogger = EventLogger
+app.oauth = mwoauth
 
 class Privs(Model):
     username = CharField()

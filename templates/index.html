@@ -1,19 +1,8 @@
 {% extends "layout.html" %}
 {% block title %}Index{% endblock %}
 {% block content %}
-  <h1>Index</h1>
-Links:
-<ul>
-<li><a href="./logs">Logs</a></li>
-{% if loginName != "" and privs >= 1 %}
-<li><a href="apps">Scripts</a></li>
-{% endif %}
-
-</ul>
-{% if loginName != "" %}
-Logged in as {{loginName}}. <a href="./logout">Logout</a>
-{% else %}
-Login <a href="./login">here</a>
-{% endif %}
+<h1>CoBot</h1>
+<p>This is a <i>private</i> web interface to control CoBot (a bot operating on eswikipedia).</p>
+<p>You can request access to <a href="https://es.wikipedia.org/wiki/Usuario_discusión:Polsaker">Polsaker</a> (also available on freenode with the same nick).</p>
 
 {% endblock %}

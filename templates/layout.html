@@ -1,17 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
-    {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CoBot's website">
+    <meta name="author" content="Polsaker">
+    <!--<link rel="icon" href="../../favicon.ico">-->
+
     <title>{% block title %}{% endblock %} - CoBot</title>
-    {% endblock %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
+
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
-      {% block footer %}
-      <div id="footcont">Coded with &#9825; by Polsaker.</div>
-      {% endblock %}
-    </div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('index') }}">CoBot</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('loglist') }}">Logs</a></li>
+                {% if privs > 0 %}
+                <li><a href="{{ url_for('scripts') }}">Scripts</a></li>
+                {% endif %}
+                </li>
+              </ul>
+            <div class="navbar-form navbar-right">
+                <div class="form-group">
+                    {% if mwoauth.get_current_user() == None %}
+                    <a class="btn btn-success btn-small" href="{{ url_for('mwoauth.login') }}" role="button">Sign in</a>
+                    {% else %}
+                    <span style="color: #999; margin-right: 15px;">Logged in as {{mwoauth.get_current_user()}} </span> <a class="btn btn-primary btn-small" href="{{ url_for('mwoauth.logout') }}" role="button">Sign out</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+
+    <div class="container">
+      {% block content %}{% endblock %}
+
+    </div> <!-- /container -->
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Coded with &#9825; by Polsaker.</p>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ url_for('static', filename='ie10-viewport-bug-workaround.js') }}"></script>
   </body>
 </html>

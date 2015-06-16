@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}Scripts{% endblock %}
+{% block title %}Logs{% endblock %}
 {% block content %}
 <h1>Registros</h1>
-<table>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Registro de tareas realizadas por el bot</div>
+
+  <!-- Table -->
+  <table class="table">
 <tr>
     <td>#</td>
     <td>Estado</td>
@@ -17,7 +22,10 @@
     <td>{{log.status}}</td>
     <td>{{log.taskName}}</td>
     <td>{{log.description}}</td>
+    <td>{{log.startTime}}</td>
+    <td>{{log.endTime}}</td>
 </tr>
 {% endfor %}
-</table>
+  </table>
+</div>
 {% endblock %}

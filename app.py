@@ -17,6 +17,7 @@ from flask import Flask
 from flask import render_template, request
 from flask_mwoauth import MWOAuth
 from os import walk
+import datetime
 from peewee import SqliteDatabase, Model, CharField, IntegerField, TextField
 import json
 import time
@@ -82,27 +83,38 @@ def execscript(script):
     mod = __import__("scripts." + script)
     
     script = getattr(mod, script).Script(config)
-        
+    
     return script.render(app, request)
     
+@app.route('/progress/<task>')
+def logapi(task):
+    log = LogEntry.get(LogEntry.id == task)
+    return str(log.progress)
+
 @app.route('/logs')
 def loglist():
     return render_template('logs.html', logs=LogEntry.select().order_by(LogEntry.id.desc()))
 
 # ---
 
+def humanDate(timestamp):
+    return datetime.datetime.fromtimestamp(
+        float(timestamp)
+    ).strftime('%Y-%m-%d %H:%M:%S')
+
 @app.context_processor
 def inject_globals():
     return dict(
         mwoauth = mwoauth,
         privs = getPrivs(),
+        humanDate = humanDate,
     )
 
 class EventLogger(object):
     def __init__(self, task_name, descr):
         self.pwarning = False
-        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description=descr, progress=0)
-        self.logentry.save()
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description=descr, progress=0, startedBy=mwoauth.get_current_user())
+        self.logentry.save(force_insert=True)
     
     def finished(self):
         if self.pwarning:
@@ -126,7 +138,7 @@ class EventLogger(object):
         self.logentry.save()
     
     def appendLog(self, text):
-        self.logentry.log = text + "\n"
+        self.logentry.log += text + "\n"
         self.logentry.save()
 
 app.cosoEventLogger = EventLogger
@@ -143,6 +155,7 @@ class LogEntry(Model):
     status = IntegerField()  # 0 = running; 1 = finished; 2 = errored; 3 = finished with errors
     log = TextField()
     taskName = CharField()
+    startedBy = CharField()
     description = CharField()
     startTime = CharField() # timestamp
     endTime = CharField()   # ^
@@ -155,4 +168,4 @@ LogEntry.create_table(True)
 Privs.create_table(True)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)

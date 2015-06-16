@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Progreso de tarea{% endblock %}
+{% block content %}
+<h1>Progreso de la tarea</h1>
+<div class="progress">
+  <div id="progressBar" class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+    0%
+  </div>
+</div>
+<script>
+function updateProgress(percentage){
+    if(percentage > 100) percentage = 100;
+    $('#progressBar').css('width', percentage+'%');
+    $('#progressBar').html(percentage+'%');
+}
+
+function update_thing(){
+    $.ajax({
+        type: 'GET',
+        url: '{{url_for('logapi', task=taskId) }}',
+        async:true
+    }).done(function(msg) {
+        updateProgress(msg);
+    });
+}
+
+setInterval(function(){update_thing();}, 5000);
+
+</script>
+{% endblock %}

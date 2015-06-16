@@ -12,6 +12,7 @@
     <td>#</td>
     <td>Estado</td>
     <td>Tarea</td>
+    <td>Iniciado por</td>
     <td>Comentario</td>
     <td>Progreso</td>
     <td>Inicio</td>
@@ -20,12 +21,22 @@
 {% for log in logs %}
 <tr>
     <td>{{log.id}}</td>
-    <td>{{log.status}}</td>
+    <td>{% if log.status == 1 %}
+        <span class="glyphicon glyphicon-ok" aria-hidden="true" title="Tarea finalizada exitosamente"></span>
+        {% elif log.status == 2 %}
+        <span class="glyphicon glyphicon-remove" aria-hidden="true" title="La tarea no pudo finalizar."></span>
+        {% elif log.status == 3 %}
+        <span class="glyphicon glyphicon-alert" aria-hidden="true" title="Errores detectados"></span>
+        <span class="glyphicon glyphicon-ok" aria-hidden="true" title="Tarea finalizada"></span>
+        {% elif log.status == 0 %}
+        <span class="glyphicon glyphicon-option-horizontal"  title="Tarea pendiente o en progreso" aria-hidden="true"></span>
+        {% endif %}</td>
     <td>{{log.taskName}}</td>
+    <td>{{log.startedBy}}</td>
     <td>{{log.description}}</td>
     <td>{{log.progress}}%</td>
-    <td>{{log.startTime}}</td>
-    <td>{{log.endTime}}</td>
+    <td>{{ humanDate(log.startTime) }}</td>
+    <td>{% if log.endTime != "-"%}{{humanDate(log.endTime)}}{% else %} - {% endif %}</td>
 </tr>
 {% endfor %}
   </table>

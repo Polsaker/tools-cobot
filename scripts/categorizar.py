@@ -10,6 +10,8 @@ from flask_wtf import Form
 from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 from flask import render_template
+import thread
+
 
 class Script(object):
     def __init__(self, config):
@@ -18,8 +20,8 @@ class Script(object):
     def execute(self, app, request):
         self.logger = app.cosoEventLogger("categorizar.py", request.form['description'])
         self.mediawiki.login()
-        self.categorize(request.form['pages'], request.form['category'])
-        return "OK!"
+        thread.start_new_thread(self.categorize, (request.form['pages'], request.form['category']))
+        return render_template('taskProgress.html', taskId=self.logger.logentry.id)
     
     def render(self, app, request):
         form = SubstForm()
@@ -34,7 +36,7 @@ class Script(object):
         
         reg = re.compile(u"\[\[(categoría|Categoría|Category|category):\s*" + category + u"\‎?\s*(\|.+)?\]\]")
         
-        percentadv = 100 / len(pages)
+        percentadv = 100 / float(len(pages))
         currper = 0
         for page in pages:
             currper += percentadv

@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Script - Subst{% endblock %}
+{% block content %}
+<h1>categorizar.py</h1>
+Añade una categoría a una(s) página(s). <br/> <br/>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <b>{{ form.category.label }}</b>: <br/> {{ form.category(size=40) }} <br/><br/>
+    <b>{{ form.pages.label }}</b>:<br /> {{ form.pages(cols=40, rows=12) }} <br/>
+    <input type="submit" value="Ejecutar">
+</form>
+{% endblock %}

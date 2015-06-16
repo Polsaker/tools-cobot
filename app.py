@@ -99,9 +99,9 @@ def inject_globals():
     )
 
 class EventLogger(object):
-    def __init__(self, task_name):
+    def __init__(self, task_name, descr):
         self.pwarning = False
-        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description="")
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description=descr, progress=0)
         self.logentry.save()
     
     def finished(self):
@@ -109,6 +109,7 @@ class EventLogger(object):
             self.logentry.status = 3
         else:
             self.logentry.status = 1
+        self.logentry.progress = 100
         self.logentry.endTime = time.time()
         self.logentry.save()
     
@@ -119,6 +120,10 @@ class EventLogger(object):
     
     def warning(self):
         self.pwarning = True
+    
+    def setProgress(self, progress):
+        self.logentry.progress = progress
+        self.logentry.save()
     
     def appendLog(self, text):
         self.logentry.log = text + "\n"
@@ -141,6 +146,7 @@ class LogEntry(Model):
     description = CharField()
     startTime = CharField() # timestamp
     endTime = CharField()   # ^
+    progress = IntegerField()   # 0-100%
     class Meta:
         database = db
 

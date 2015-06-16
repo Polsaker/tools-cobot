@@ -5,8 +5,17 @@
 Añade una categoría a una(s) página(s). <br/> <br/>
 <form method="POST" action="">
     {{ form.hidden_tag() }}
-    <b>{{ form.category.label }}</b>: <br/> {{ form.category(size=40) }} <br/><br/>
-    <b>{{ form.pages.label }}</b>:<br /> {{ form.pages(cols=40, rows=12) }} <br/>
-    <input type="submit" value="Ejecutar">
+    
+    <div class="input-group">
+        {{ form.category(size=50, placeholder=form.category.label.text, class="form-control") }}
+    </div>
+    <div class="input-group">
+        {{ form.pages(cols=49, rows=12,  placeholder=form.pages.label.text, class="form-control") }}
+    </div>
+    
+    <div class="input-group">
+        {{ form.description(size=50, placeholder=form.description.label.text, class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-success navbar-btn">Ejecutar</button>
 </form>
 {% endblock %}

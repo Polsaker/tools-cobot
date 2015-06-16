@@ -16,7 +16,7 @@ class Script(object):
         self.mediawiki = _tools.MediaWikiAPI(config['mwuser'], config['mwpass'])
     
     def execute(self, app, request):
-        self.logger = app.cosoEventLogger("categorizar.py")
+        self.logger = app.cosoEventLogger("categorizar.py", request.form['description'])
         self.mediawiki.login()
         self.categorize(request.form['pages'], request.form['category'])
         return "OK!"
@@ -34,7 +34,12 @@ class Script(object):
         
         reg = re.compile(u"\[\[(categoría|Categoría|Category|category):\s*" + category + u"\‎?\s*(\|.+)?\]\]")
         
+        percentadv = 100 / len(pages)
+        currper = 0
         for page in pages:
+            currper += percentadv
+            self.logger.setProgress(currper)
+
             pagina2 = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=revisions&titles={0}&rvprop=content&format=json".format(quote_plus(page.encode('utf8')))))['query']['pages']
             try:
                 pagina = pagina2[next(iter(pagina2))]['revisions'][0]['*']
@@ -53,8 +58,9 @@ class Script(object):
         self.logger.finished()
 
 class SubstForm(Form):
-    pages = TextAreaField('P&aacute;ginas', validators=[DataRequired()])
-    category = StringField('Categor&iacute;a', validators=[DataRequired()])
+    pages = TextAreaField(u'Páginas a categorizar', validators=[DataRequired()])
+    category = StringField(u'Categoría a añadir', validators=[DataRequired()])
+    description = StringField(u'Razón para lanzar el script', validators=[DataRequired()])
 
     #def validate_category(form, field):
     #    if not field.data.startswith("Categoría:"):

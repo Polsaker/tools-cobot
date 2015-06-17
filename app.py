@@ -127,6 +127,7 @@ class EventLogger(object):
     
     def errored(self):
         self.logentry.status = 2
+        self.logentry.progress = 100
         self.logentry.endTime = time.time()
         self.logentry.save()
     

@@ -8,6 +8,7 @@
   </div>
 </div>
 <script>
+var progress = 0;
 function updateProgress(percentage){
     if(percentage > 100) percentage = 100;
     $('#progressBar').css('width', percentage+'%');
@@ -15,16 +16,22 @@ function updateProgress(percentage){
 }
 
 function update_thing(){
+    if(progress >= 100){
+        $('#progressBar').removeClass('progress-bar-info');
+        $('#progressBar').addClass('progress-bar-success');
+        return;
+    }
     $.ajax({
         type: 'GET',
         url: '{{url_for('logapi', task=taskId) }}',
         async:true
     }).done(function(msg) {
         updateProgress(msg);
+        progress = msg;
     });
 }
 
-setInterval(function(){update_thing();}, 5000);
+setInterval(function(){update_thing();}, 2000);
 
 </script>
 {% endblock %}

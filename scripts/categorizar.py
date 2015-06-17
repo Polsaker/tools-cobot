@@ -42,7 +42,13 @@ class Script(object):
             currper += percentadv
             self.logger.setProgress(currper)
 
-            pagina2 = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=revisions&titles={0}&rvprop=content&format=json".format(quote_plus(page.encode('utf8')))))['query']['pages']
+            pagina2 = json.loads(self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=query&prop=revisions&titles={0}&rvprop=content&format=json&redirects".format(quote_plus(page.encode('utf8')))))['query']
+            try:
+                page = pagina2['redirects']['to']
+            except:
+                pass
+                
+            pagina2 = pagina2['pages']
             try:
                 pagina = pagina2[next(iter(pagina2))]['revisions'][0]['*']
             except:

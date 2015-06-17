@@ -38,6 +38,7 @@ class Script(object):
         
         percentadv = 100 / float(len(pages))
         currper = 0
+        bad = True
         for page in pages:
             currper += percentadv
             self.logger.setProgress(currper)
@@ -60,10 +61,22 @@ class Script(object):
                 pagina += u"\n[[Categoría:" + category + "]]"
                 params = {"minor": '', "bot": '', "pageid": list(pagina2)[0], "text": pagina, "token": self.mediawiki.gettoken(), "summary": "Bot: Añadiendo categoría."}
                 rec = self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=edit&format=json", params)
-                self.logger.appendLog(page + ": OK?. " + str(rec))
+                try:
+                    rec = json.loads(rec)
+                    if rec['edit']['result'] == "Success":
+                        self.logger.appendLog(page + ": OK!. " + str(rec))
+                        bad = False
+                    else:
+                        self.logger.appendlog(page + ": ERROR! " + str(rec))
+                except:
+                    self.logger.appendlog(page + ": ERROR! " + str(rec))
             else:
                 self.logger.appendLog(page + ": Category exists.")
-        self.logger.finished()
+        
+        if bad:
+            self.logger.errored()
+        else:
+            self.logger.finished()
 
 class SubstForm(Form):
     pages = TextAreaField(u'Páginas a categorizar', validators=[DataRequired()])

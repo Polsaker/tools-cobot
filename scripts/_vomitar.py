@@ -10,6 +10,8 @@ from urllib import quote_plus
 
 # Esto sirve para que sea mas fácil ejecutar desde la lína de comandos (cron, etc)
 
+# cd ~/www/python/src && 
+
 class Vomitador(object):
     def __init__(self, config, logger):
         if logger:
@@ -18,6 +20,7 @@ class Vomitador(object):
             self.logger = app.EventLogger("vomitar.py", "Volcado automático", True)
             
         self.mediawiki = _tools.MediaWikiAPI(config['mwuser'], config['mwpass'])
+        self.mediawiki.login()
         
 
     def vomitar(self, arbolito, balde):
@@ -42,7 +45,7 @@ class Vomitador(object):
             else:
                 page2 = page2 + "[[" + child['title'] + u"]] • "
                 
-        if page2[-2:] == "• ":
+        if page2[-2:] == u"• ":
             page2 = page[:-2]
         page = page2 + page
         params = {"title": balde, "text": page, "token": self.mediawiki.gettoken(), "summary": "Bot: Volcando categorías"}

@@ -46,7 +46,7 @@ class Vomitador(object):
                 page2 = page2 + "[[" + child['title'] + u"]] • "
                 
         if page2[-2:] == u"• ":
-            page2 = page[:-2]
+            page2 = page2[:-2]
         page = page2 + page
         params = {"title": balde, "text": page, "token": self.mediawiki.gettoken(), "summary": "Bot: Volcando categorías"}
         rec = self.mediawiki.request("https://es.wikipedia.org/w/api.php?action=edit&format=json", params)
@@ -59,7 +59,6 @@ class Vomitador(object):
         toreturn = "=" * level + "[[:" + cat + "]]" + "="*level + "\n" # titulo
         parent = json.loads(self.mediawiki.request("http://es.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=" + quote_plus(cat.encode('utf-8')) + "&prop=info&cmprop=title&cmlimit=5000&format=json"))
         for child in parent['query']['categorymembers']:
-            print("level {0} iter".format(level))
             if child['ns'] == 14:
                 
                 if toreturn[-2:]== u"• ":

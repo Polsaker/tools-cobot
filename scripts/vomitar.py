@@ -36,3 +36,7 @@ class SubstForm(Form):
     arbolito = StringField(u'Árbol de categorías', validators=[DataRequired()])
     balde = StringField(u'Página en la que se volcará', validators=[DataRequired()])
     description = StringField(u'Razón para lanzar el script', validators=[DataRequired()])
+    
+    def validate_arbolito(form, field):
+        if not field.data.startswith(u"Categoría:"):
+            raise ValidationError("Eso no es una categoría!")

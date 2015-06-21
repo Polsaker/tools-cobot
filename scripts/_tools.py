@@ -23,7 +23,13 @@ class MediaWikiAPI(object):
                     str_post_data[k] = v
 
             login_data = urlencode(str_post_data).encode('utf-8')
-            return self.opener.open(url, login_data).read().decode()
+            try:
+                stuff = self.opener.open(url, login_data).read().decode()
+            except urllib2.HTTPError, e:
+                print e.fp.read()
+                return
+             
+            return stuff
         return self.opener.open(url).read().decode()
 
     def gettoken(self, wiki="es.wikipedia"):

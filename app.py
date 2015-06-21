@@ -36,8 +36,8 @@ app.register_blueprint(mwoauth.bp)
 db = SqliteDatabase('stuff.db')
 db.connect()
 
-def getPrivs():
-    user = mwoauth.get_current_user(False)
+def getPrivs(cache=False):
+    user = mwoauth.get_current_user(cache)
     if user:
         try:
             dbuser = Privs.get(Privs.username == user)
@@ -48,6 +48,21 @@ def getPrivs():
     else:
         privs = -1
     return privs
+
+def canUseScript(script, cache=False):
+    if getPrivs(cache) > 0:
+        dbuser = Privs.get(Privs.username == mwoauth.get_current_user())
+        try:
+            userprivs = SectionPrivs.get(SectionPrivs.uid == dbuser.id and SectionPrivs.section == "*")
+            return True
+        except:
+            try:
+                userprivs = SectionPrivs.get(SectionPrivs.uid == dbuser.id and SectionPrivs.section == script)
+                return True
+            except:
+                return False
+    return False
+    
 # ---
 
 @app.route('/')
@@ -67,19 +82,17 @@ def scripts(): # List scripts
     for (dirpath, dirnames, filenames) in walk("./scripts"):
         for filename in filenames:
             if not filename.startswith("_") and filename.endswith(".py"):
-                f.append(filename.split(".py")[0])
+                if canUseScript(filename.split(".py")[0], True):
+                    f.append(filename.split(".py")[0])
         break
     
     return render_template('scripts.html', scripts=f)
 
 @app.route('/script/<script>/', methods=['GET', 'POST'])
 def execscript(script):
-    if mwoauth.get_current_user(False) is None:
+    if not canUseScript(script + ".py"):
         return "Unauthorized"
-    
-    user = Privs.get(Privs.username == mwoauth.get_current_user())
-    if user.privs == 0:
-        return "Unauthorized"
+        
     mod = __import__("scripts." + script)
     
     script = getattr(mod, script).Script(config)
@@ -155,6 +168,14 @@ class Privs(Model):
 
     class Meta:
         database = db
+        
+class SectionPrivs(Model):
+    uid = IntegerField()
+    section = CharField()
+
+    class Meta:
+        database = db
+
 
 class LogEntry(Model):
     status = IntegerField()  # 0 = running; 1 = finished; 2 = errored; 3 = finished with errors
@@ -171,6 +192,7 @@ class LogEntry(Model):
 
 LogEntry.create_table(True)
 Privs.create_table(True)
+SectionPrivs.create_table(True)
 
 if __name__ == "__main__":
     app.run(threaded=True)

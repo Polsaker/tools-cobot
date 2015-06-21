@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import _tools
-from .. import app
+import json
+if __name__ == '__main__' and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+import app
 from urllib import quote_plus
 
 # Esto sirve para que sea mas fácil ejecutar desde la lína de comandos (cron, etc)
@@ -17,9 +21,7 @@ class Vomitador(object):
         
 
     def vomitar(self, arbolito, balde):
-        arbolito = res[0]
-        balde = res[1]
-        
+       
         page = ""
         page2 = ""
         parent = self.mediawiki.request("http://es.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=" + quote_plus(arbolito) + "&prop=info&cmprop=title&cmlimit=5000&format=json")
@@ -30,15 +32,15 @@ class Vomitador(object):
         
         for child in parent['query']['categorymembers']:
             currper += percentadv
-                
+            print("root iter")
             self.logger.setProgress(currper)
             
             if child['ns'] == 14:
                 page = page + "\n" + self.explorecat(child['title'], 2)
-                if page[-2:] == "• ":
+                if page[-2:] == u"• ":
                     page = page[:-2]
             else:
-                page2 = page2 + "[[" + child['title'] + "]] • "
+                page2 = page2 + "[[" + child['title'] + u"]] • "
                 
         if page2[-2:] == "• ":
             page2 = page[:-2]
@@ -52,18 +54,18 @@ class Vomitador(object):
             return ""
 
         toreturn = "=" * level + "[[:" + cat + "]]" + "="*level + "\n" # titulo
-        parent = json.loads(self.mediawiki.request("http://es.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=" + quote_plus(cat) + "&prop=info&cmprop=title&cmlimit=5000&format=json"))
+        parent = json.loads(self.mediawiki.request("http://es.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=" + quote_plus(cat.encode('utf-8')) + "&prop=info&cmprop=title&cmlimit=5000&format=json"))
         for child in parent['query']['categorymembers']:
-
+            print("level {0} iter".format(level))
             if child['ns'] == 14:
                 
-                if toreturn[-2:]== "• ":
+                if toreturn[-2:]== u"• ":
                     toreturn = toreturn[:-2]
                 adding = self.explorecat(child['title'], level + 1)
                 if adding != "":
                     toreturn = toreturn + "\n" + adding
             else:
-                toreturn = toreturn + "[[" + child['title'] + "]] • "
+                toreturn = toreturn + "[[" + child['title'] + u"]] • "
         
         return toreturn
 
@@ -74,6 +76,6 @@ if __name__ == "__main__":
     except:
         raise Exception("Entrada invalida")
     
-    config = json.load(open("../config.json"))
+    config = json.load(open("config.json"))
     
     Vomitador(config, False).vomitar(res[0], res[1])

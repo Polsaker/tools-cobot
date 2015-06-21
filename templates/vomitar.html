@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Script - Subst{% endblock %}
+{% block content %}
+<h1>categorizar.py</h1>
+Añade una categoría a una(s) página(s). <br/> <br/>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    
+    <div class="input-group">
+        {{ form.arbolito(size=50, placeholder=form.arbolito.label.text, class="form-control") }}
+    </div>
+    <div class="input-group">
+        {{ form.balde(size=50,  placeholder=form.balde.label.text, class="form-control") }}
+    </div>
+    
+    <div class="input-group">
+        {{ form.description(size=50, placeholder=form.description.label.text, class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-danger navbar-btn">Ejecutar</button>
+</form>
+{% endblock %}

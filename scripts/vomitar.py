@@ -11,34 +11,28 @@ from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError
 from flask import render_template
 import thread
-from .. import app
 
 import _vomitar
 
 
 class Script(object):
     def __init__(self, config):
-        pass
+        self.config = config
     
-    def execute(self, qapp, request):
-        self.logger = app.EventLogger("vomitar.py", request.form['description'])
-        self.mediawiki.login()
-        thread.start_new_thread(self.categorize, (request.form['pages'], request.form['category']))
+    def execute(self, app, request):
+        self.logger = app.cosoEventLogger("vomitar.py", request.form['description'])
+        thread.start_new_thread(_vomitar.Vomitador(self.config, self.logger).vomitar, (request.form['arbolito'].encode('utf-8'), request.form['balde'].encode('utf-8')))
         return render_template('taskProgress.html', taskId=self.logger.logentry.id)
     
-    def render(self, qapp, request):
+    def render(self, app, request):
         form = SubstForm()
         if form.validate_on_submit():
-            return self.execute(qapp, request)
+            return self.execute(app, request)
             
         return render_template('vomitar.html', form=form)
 
 
 class SubstForm(Form):
-    pages = TextAreaField(u'Páginas a categorizar', validators=[DataRequired()])
-    category = StringField(u'Categoría a añadir', validators=[DataRequired()])
+    arbolito = StringField(u'Árbol de categorías', validators=[DataRequired()])
+    balde = StringField(u'Página en la que se volcará', validators=[DataRequired()])
     description = StringField(u'Razón para lanzar el script', validators=[DataRequired()])
-
-    #def validate_category(form, field):
-    #    if not field.data.startswith("Categoría:"):
-    #        raise ValidationError("Eso no es una categoría!")

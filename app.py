@@ -111,9 +111,13 @@ def inject_globals():
     )
 
 class EventLogger(object):
-    def __init__(self, task_name, descr):
+    def __init__(self, task_name, descr, nostarted=False):
         self.pwarning = False
-        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description=descr, progress=0, startedBy=mwoauth.get_current_user())
+        if nostarted:
+            startedby = "-"
+        else:
+            startedby = mwoauth.get_current_user()
+        self.logentry = LogEntry(status = 0, log = "", taskName=task_name, startTime=time.time(), endTime="-", description=descr, progress=0, startedBy=startedby)
         self.logentry.save(force_insert=True)
     
     def finished(self):

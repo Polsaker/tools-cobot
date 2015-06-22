@@ -35,8 +35,11 @@ class Script(object):
         lista = json.loads(lista)
 
         reg = re.compile(u"(?i)\[\[\s*" + re.escape(pfrom))
-        
-        percentadv = 100 / float(len(lista['query']['backlinks']))
+        try:
+            percentadv = 100 / float(len(lista['query']['backlinks']))
+        except:
+            self.logger.appendLog("No pages.")
+            self.logger.errored()
         currper = 0
 
         for page in lista['query']['backlinks']:

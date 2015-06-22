@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Script - Subst{% endblock %}
+{% block content %}
+<h1>trasladar.py</h1>
+Cambia todos los enlaces que apuntan hacia una página. <br/> <br/>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    
+    <div class="input-group">
+        {{ form.pfrom(size=50, placeholder=form.pfrom.label.text, class="form-control") }}
+    </div>
+    <div class="input-group">
+        {{ form.to(size=50,  placeholder=form.to.label.text, class="form-control") }}
+    </div>
+    
+    <div class="input-group">
+        {{ form.description(size=50, placeholder=form.description.label.text, class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-success navbar-btn">Ejecutar</button>
+</form>
+{% endblock %}

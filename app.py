@@ -20,6 +20,7 @@ from os import walk
 import datetime
 from peewee import SqliteDatabase, Model, CharField, IntegerField, TextField
 import json
+import random
 import time
 
 app = Flask(__name__)
@@ -108,6 +109,13 @@ def logapi(task):
 def loglist():
     return render_template('logs.html', logs=LogEntry.select().order_by(LogEntry.id.desc()))
 
+# api stuff
+@app.route('/api/editprop/<user>')
+def editprop(user):
+    import scripts._editprop
+    f = scripts._editprop.Editprop(config)
+    return json.dumps(f.getProp(user))
+
 # ---
 
 def humanDate(timestamp):
@@ -121,6 +129,7 @@ def inject_globals():
         mwoauth = mwoauth,
         privs = getPrivs(),
         humanDate = humanDate,
+        random = random
     )
 
 class EventLogger(object):

@@ -1,0 +1,71 @@
+{
+"wikibooks": {
+"url": "wikibooks.org",
+"langs": ["af", "als", "ang", "als", "az", "ms", "su", "bs", "cs", "co", "cy", "da", "de", "na", "et", "en", "es", "eo", "eu", "fr", "fy", "gl", "hr", "ia", "ie", "is", "it", "ku", "la", "lt", "mg", "nl", "no", "oc", "uz", "nds", "pl", "pt", "ro", "qu", "sq", "sk", "sl", "fi", "sv", "vi", "tl", "tt", "tr", "tk", "vo", "el", "bg", "be", "kk", "ky", "mk", "ru", "sr", "tg", "uk", "cv", "hy", "ka", "he", "ar", "fa", "ps", "ur", "bn", "hi", "mr", "sa", "kn", "ml", "pa", "ta", "te", "km", "ne", "th", "ko", "ja", "zh"]
+},
+"wikipedia": {
+"url": "wikipedia.org",
+"langs": [
+"en", "sv", "nl", "de", "fr", "ru", "it", "es", "vi", "war", "ceb", "pl", "ja", "pt", "zh", "uk", "ca", "no", "fa", "fi", "id", "ar", "cs", "ko", "ms", "hu", "ro", "sr", "tr", "min", "sh", "kk", "eo", "sk", "eu", "da", "lt", "bg", "he", "hr", "sl", "hy", "uz", "et", "vo", "nn", "gl", "simple", "hi", "la", "el", "az", "th", "oc", "ka", "mk", "be", "new", "tt", "pms", "tl", "ta", "te", "cy", "lv", "be-x-old", "ht", "ce", "ur", "bs", "sq", "br", "jv", "mg", "lb", "mr", "is", "ml", "pnb", "ba", "af", "my", "zh-yue", "bn", "ga", "lmo", "yo", "fy", "an", "cv", "tg", "ky", "sw", "ne", "io", "gu", "bpy", "sco", "scn", "nds", "ku", "ast", "qu", "su", "als", "gd", "kn", "am", "ckb", "ia", "nap", "bug", "bat-smg", "wa", "map-bms", "mn", "arz", "pa", "mzn", "si", "zh-min-nan", "yi", "sah", "fo", "vec", "sa", "bar", "nah", "os", "roa-tara", "or", "pam", "hsb", "se", "li", "mrj", "mi", "ilo", "co", "hif", "bcl", "gan", "frr", "bo", "rue", "glk", "mhr", "nds-nl", "fiu-vro", "ps", "tk", "pag", "vls", "gv", "xmf", "diq", "km", "kv", "zea", "csb", "crh", "hak", "vep", "sc", "ay", "dv", "so", "zh-classical", "nrm", "udm", "rm", "koi", "kw", "ug", "stq", "lad", "wuu", "lij", "eml", "bh", "fur", "mt", "as", "cbk-zam", "gn", "pi", "szl", "pcd", "gag", "ksh", "nov", "ang", "ie", "nv", "ace", "ext", "frp", "mwl", "ln", "sn", "lez", "dsb", "pfl", "krc", "haw", "pdc", "kab", "xal", "rw", "myv", "to", "arc", "kl", "bjn", "lo", "kbd", "ha", "pap", "tpi", "av", "lbe", "mdf", "jbo", "na", "wo", "bxr", "ty", "srn", "kaa", "ig", "nso", "kg", "tet", "ab", "ltg", "roa-rup", "zu", "za", "cdo", "tyv", "chy", "tw", "rmy", "cu", "tn", "om", "chr", "got", "bi", "pih", "rn", "sm", "bm", "ss", "mo", "iu", "sd", "pnt", "ki", "xh", "ts", "ee", "ak", "ti", "fj", "lg", "ks", "ff", "sg", "ny", "ve", "cr", "st", "dz", "ik", "tum", "ch", "ng", "ii", "cho", "mh", "aa", "kj", "ho", "mus", "kr", "hz",  "qu"
+]
+},
+"wiktionary":{
+"url": "wiktionary.org",
+"langs": ["ang", "af", "als",  "an",  "roa-rup", "ast", "gn", "ay", "az", "id", "ms", "zh-min-nan", "jv", "su", "bs", "br", "ca", "cs", "co", "cy", "da", "de", "na", "et", "en", "es", "eo", "eu", "fo", "fr", "fy", "ga", "gv", "sm", "gd", "gl", "ha", "hr", "io", "ia", "ie", "ik", "zu", "is", "it", "kl", "csb", "kw", "rw", "sw", "ku", "la", "lv", "lb", "lt", "li", "ln", "jbo", "hu", "mg", "mt", "mi", "fj", "nah", "nl", "no", "nn", "oc", "om", "uz", "nds", "pl", "pt", "ro", "qu", "sg", "st", "tn", "sq", "scn", "simple",  "ss", "sk", "sl", "so", "sh", "fi", "sv", "tl", "vi", "tpi", "tr", "tk", "za", "vo", "wa", "wo", "ts", "el", "be", "bg", "ky", "kk", "mk", "mn", "ru", "sr", "tt", "tg", "uk", "hy", "ka", "yi", "he", "ur", "ar", "ps", "pnb", "sd", "fa", "ug", "dv", "ks", "ne", "mr", "sa", "hi", "bn", "pa", "gu", "or", "ta", "te", "kn", "ml", "si", "th", "my", "bo", "lo", "km", "iu", "chr", "ti", "am", "ko", "ja", "zh"]
+},
+"wikinews":{
+"url": "wikinews.org",
+"langs": ["als", "bs", "ca", "cs", "de", "el", "en", "es", "fa", "fr", "it", "hu", "nl", "no", "nds", "pl", "pt", "ro", "sq", "fi", "sv", "tr", "bg", "ru", "sr", "uk", "he", "ar", "sd", "ta", "th", "ko", "ja", "zh"]
+},
+"wikiquote": {
+"url": "wikiquote.org",
+"langs": ["af", "als", "id", "bs", "ca", "cs", "cy", "da", "de", "en", "es", "eo", "eu", "fr", "is", "it", "ku", "la", "lb", "lt", "hu", "nl", "no", "pl", "pt", "ro", "sk", "fi", "sv", "tr", "el", "bg", "ru", "sr", "uk", "hy", "ka", "he", "ar", "fa", "gu", "mr", "ta", "th", "ko", "ja", "zh"]
+},
+"wikisource":{
+"url": "wikisource.org",
+"langs": ["als", "id", "bs", "br", "ca", "cs", "cy", "da", "de", "en", "es", "fr", "frr", "gl", "hr", "hy", "is", "it", "la", "lt", "li", "nl", "pl", "pt", "ro", "sk", "sl", "fi", "sv", "vi", "tr", "el", "ru", "sr", "uk", "he", "yi", "ar", "fa", "bn", "ml", "th", "ko", "ja", "zh"]
+},
+"wikispecies":{
+"url": "species.wikimedia.org",
+"langs": []
+},
+"wikiversity": {
+"url": "wikiversity.org",
+"langs": ["cs", "de", "en", "es", "fr", "it", "ko", "pt", "fi", "sv", "el", "ru", "ja"]
+},
+"wikivoyage":{
+"url": "wikivoyage.org",
+"langs": ["de", "en", "el", "es", "fr", "it", "nl", "pl", "pt", "sv", "ro", "ru", "uk", "vi", "he", "zh"]
+},
+"commons": {
+"url": "commons.wikimedia.org",
+"langs": []
+},
+"meta": {
+"url": "meta.wikimedia.org",
+"langs": []
+},
+"incubator": {
+"url": "incubator.wikimedia.org",
+"langs": []
+},
+"wikidata": {
+"url": "wikidata.org",
+"langs": []
+},
+"w": { "aliasof": "wikipedia"},
+"wiki": { "aliasof": "wikipedia"},
+"wikt": { "aliasof": "wiktionary"},
+"n": { "aliasof": "wikinews"},
+"b": { "aliasof": "wikibooks"},
+"q": { "aliasof": "wikiquote"},
+"s": { "aliasof": "wikisource"},
+"species": { "aliasof": "wikispecies"},
+"v": { "aliasof": "wikiversity"},
+"voy": { "aliasof": "wikivoyage"},
+"c": { "aliasof": "commons"},
+"w": { "aliasof": "wikipedia"},
+"metawikipedia": { "aliasof": "meta"},
+"m": { "aliasof": "meta"},
+"d": { "aliasof": "wikidata"}
+}

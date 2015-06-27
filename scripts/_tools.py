@@ -32,23 +32,23 @@ class MediaWikiAPI(object):
             return stuff
         return self.opener.open(url).read().decode('utf-8')
 
-    def gettoken(self, wiki="es.wikipedia"):
-        req = self.request("https://" + wiki + ".org/w/api.php?action=query&meta=tokens&format=json&continue")
+    def gettoken(self, wiki="es.wikipedia.org"):
+        req = self.request("https://" + wiki + "/w/api.php?action=query&meta=tokens&format=json&continue")
         #print(req)
         return json.loads(req)['query']['tokens']['csrftoken']
 
-    def login(self, wiki="es.wikipedia"):
+    def login(self, wiki="es.wikipedia.org"):
         # check if we're already logged in
-        resp = json.loads(self.request("https://" + wiki +".org/w/api.php?action=query&meta=userinfo&format=json"))
+        resp = json.loads(self.request("https://" + wiki +"/w/api.php?action=query&meta=userinfo&format=json"))
         try:
             resp['query']['userinfo']['anon']
         except:
             return
             
-        resp = json.loads(self.request("https://" + wiki +".org/w/api.php?action=login&format=json",
+        resp = json.loads(self.request("https://" + wiki +"/w/api.php?action=login&format=json",
                 {'lgname': self.user, 'lgpassword': self.password}))
         if resp['login']['result'] == "NeedToken":
-            resp = json.loads(self.request("https://" + wiki + ".org/w/api.php?action=login&format=json",
+            resp = json.loads(self.request("https://" + wiki + "/w/api.php?action=login&format=json",
                 {'lgname': self.user, 'lgpassword': self.password, 'lgtoken': resp['login']['token']}))
             if resp['login']['result'] != "Success":
                 print(resp)

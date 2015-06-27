@@ -23,7 +23,7 @@ class Editprop(object):
         
     def getcontrib(self, user, wiki, ucc=""):
         global listita
-        res = json.loads(self.mediawiki.request("https://" + wiki + "/w/api.php?action=query&list=usercontribs&ucuser={0}&ucprop=title&format=json&uclimit=5000".format(user) + ucc))
+        res = json.loads(self.mediawiki.request("https://" + wiki + "/w/api.php?action=query&list=usercontribs&ucuser={0}&ucprop=title&format=json&uclimit=5000&rawcontinue=".format(user) + ucc))
         
         for page in res['query']['usercontribs']:
             try:

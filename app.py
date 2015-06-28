@@ -114,7 +114,7 @@ def loglist():
 def editprop(user):
     import scripts._editprop
     f = scripts._editprop.Editprop(config)
-    return json.dumps(f.getProp(user))
+    return json.dumps(f.getProp(user.encode('utf-8')))
 
 # ---
 

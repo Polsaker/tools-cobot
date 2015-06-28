@@ -3,6 +3,7 @@
 
 import _tools
 import json
+from urllib import quote_plus
 
 # Obtener la proporción de ediciones del usuario por namespace
 class Editprop(object): 
@@ -15,7 +16,7 @@ class Editprop(object):
         wiki = self.getWiki(user)
         self.listita = {}
         self.total = 0
-        self.getcontrib(user, wiki)
+        self.getcontrib(quote_plus(user), wiki)
         final = {}
         for i in self.listita:
             final[i] = {'perc': (self.listita[i] / float(self.total)) * 100, 'total': self.listita[i]}
@@ -23,10 +24,6 @@ class Editprop(object):
         
     def getcontrib(self, user, wiki, ucc=""):
         global listita
-        try:
-            user = user.encode('utf-8')
-        except:
-            pass
         res = json.loads(self.mediawiki.request("https://" + wiki + "/w/api.php?action=query&list=usercontribs&ucuser={0}&ucprop=title&format=json&uclimit=5000&rawcontinue=".format(user) + ucc))
         
         for page in res['query']['usercontribs']:
